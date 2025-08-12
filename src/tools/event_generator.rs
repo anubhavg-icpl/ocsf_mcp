@@ -7,6 +7,8 @@ use crate::ocsf::{OcsfEvent, OcsfSchema};
 
 #[derive(Debug, Serialize, Deserialize, schemars::JsonSchema)]
 pub struct GenerateEventRequest {
+    #[schemars(description = "OCSF schema version (defaults to 1.7.0-dev)")]
+    pub version: Option<String>,
     pub event_class: String,
     pub required_fields: String,
     pub optional_fields: Option<String>,
@@ -14,12 +16,15 @@ pub struct GenerateEventRequest {
 
 /// Generate a valid OCSF event JSON from parameters
 pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String> {
+    let version = request.version.as_deref().unwrap_or("1.7.0-dev");
+
     tracing::info!(
-        "generate_ocsf_event called: event_class={}",
+        "generate_ocsf_event called: version={}, event_class={}",
+        version,
         request.event_class
     );
 
-    let schema = OcsfSchema::load()
+    let schema = OcsfSchema::load_version(version)
         .await
         .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 

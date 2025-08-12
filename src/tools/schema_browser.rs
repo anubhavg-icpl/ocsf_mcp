@@ -5,6 +5,8 @@ use crate::ocsf::{OcsfSchema, SchemaInfo};
 
 #[derive(Debug, Serialize, Deserialize, schemars::JsonSchema)]
 pub struct BrowseSchemaRequest {
+    #[schemars(description = "OCSF schema version (defaults to 1.7.0-dev)")]
+    pub version: Option<String>,
     pub category: Option<String>,
     pub event_class: Option<String>,
     pub show_attributes: bool,
@@ -12,13 +14,16 @@ pub struct BrowseSchemaRequest {
 
 /// Browse OCSF schema categories, event classes, and attributes
 pub async fn browse_ocsf_schema(request: BrowseSchemaRequest) -> Result<String> {
+    let version = request.version.as_deref().unwrap_or("1.7.0-dev");
+
     tracing::info!(
-        "browse_ocsf_schema called: category={:?}, event_class={:?}",
+        "browse_ocsf_schema called: version={}, category={:?}, event_class={:?}",
+        version,
         request.category,
         request.event_class
     );
 
-    let schema = OcsfSchema::load()
+    let schema = OcsfSchema::load_version(version)
         .await
         .map_err(|e| anyhow::anyhow!(e.to_string()))?;
 

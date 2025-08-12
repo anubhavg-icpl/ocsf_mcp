@@ -2,13 +2,16 @@
 // Each tool is in its own module for better organization
 
 pub mod code_generator;
+pub mod docs_tool;
 pub mod event_generator;
 pub mod mapper;
 pub mod schema_browser;
 pub mod validator;
+pub mod version_tools;
 
 // Re-export for convenience
 pub use code_generator::{generate_logging_code as generate_code_impl, GenerateCodeRequest};
+pub use docs_tool::{read_ocsf_docs as read_docs_impl, ReadOcsfDocsRequest};
 pub use event_generator::{generate_ocsf_event as generate_event_impl, GenerateEventRequest};
 pub use mapper::{
     list_event_examples as list_examples_impl, map_custom_to_ocsf as map_custom_impl,
@@ -16,6 +19,10 @@ pub use mapper::{
 };
 pub use schema_browser::{browse_ocsf_schema as browse_schema_impl, BrowseSchemaRequest};
 pub use validator::{validate_ocsf_event as validate_event_impl, ValidateEventRequest};
+pub use version_tools::{
+    get_newest_ocsf_version as get_newest_version_impl, list_ocsf_versions as list_versions_impl,
+    GetNewestVersionRequest, ListVersionsRequest,
+};
 
 use rmcp::{
     handler::server::{router::tool::ToolRouter, wrapper::Parameters},
@@ -129,6 +136,48 @@ impl OcsfServer {
             )),
         }
     }
+
+    #[tool(description = "List all available OCSF schema versions")]
+    async fn list_ocsf_versions(
+        &self,
+        Parameters(request): Parameters<ListVersionsRequest>,
+    ) -> Result<CallToolResult, McpError> {
+        match list_versions_impl(request).await {
+            Ok(result) => Ok(CallToolResult::success(vec![Content::text(result)])),
+            Err(e) => Err(McpError::internal_error(
+                "list_versions_error",
+                Some(serde_json::json!({"error": e.to_string()})),
+            )),
+        }
+    }
+
+    #[tool(description = "Get the newest stable OCSF schema version")]
+    async fn get_newest_ocsf_version(
+        &self,
+        Parameters(request): Parameters<GetNewestVersionRequest>,
+    ) -> Result<CallToolResult, McpError> {
+        match get_newest_version_impl(request).await {
+            Ok(result) => Ok(CallToolResult::success(vec![Content::text(result)])),
+            Err(e) => Err(McpError::internal_error(
+                "get_newest_version_error",
+                Some(serde_json::json!({"error": e.to_string()})),
+            )),
+        }
+    }
+
+    #[tool(description = "Read OCSF documentation and mapping guides")]
+    async fn read_ocsf_docs(
+        &self,
+        Parameters(request): Parameters<ReadOcsfDocsRequest>,
+    ) -> Result<CallToolResult, McpError> {
+        match read_docs_impl(request).await {
+            Ok(result) => Ok(CallToolResult::success(vec![Content::text(result)])),
+            Err(e) => Err(McpError::internal_error(
+                "read_docs_error",
+                Some(serde_json::json!({"error": e.to_string()})),
+            )),
+        }
+    }
 }
 
 // ServerHandler implementation
@@ -142,8 +191,10 @@ impl ServerHandler for OcsfServer {
             instructions: Some(
                 "MCP server for implementing OCSF-based logging in any application. \
                  Provides schema browsing, event generation, validation, and code generation tools. \
+                 Supports multiple OCSF schema versions (1.0.0 through 1.7.0-dev). \
                  Tools: browse_ocsf_schema, generate_ocsf_event, validate_ocsf_event, \
-                 generate_logging_code, map_custom_to_ocsf, list_event_examples."
+                 generate_logging_code, map_custom_to_ocsf, list_event_examples, \
+                 list_ocsf_versions, get_newest_ocsf_version, read_ocsf_docs."
                     .to_string(),
             ),
         }

@@ -108,14 +108,62 @@ pub struct AttributeSummary {
 }
 
 impl OcsfSchema {
-    /// Load OCSF schema from file or fallback to embedded
+    /// Load OCSF schema from file or fallback to embedded (defaults to v1.7.0-dev)
+    #[allow(dead_code)]
     pub async fn load() -> anyhow::Result<Self> {
-        // Try loading from data directory first
-        let schema_path =
-            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data/ocsf-schema/1.7.0-dev.json");
+        Self::load_version("1.7.0-dev").await
+    }
+
+    /// List all available OCSF schema versions
+    pub fn list_versions() -> anyhow::Result<Vec<String>> {
+        let schema_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data/ocsf-schema");
+
+        if !schema_dir.exists() {
+            return Ok(vec!["1.7.0-dev".to_string()]); // Fallback to embedded
+        }
+
+        let mut versions = Vec::new();
+        for entry in std::fs::read_dir(schema_dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
+                if name.ends_with(".json") {
+                    versions.push(name.trim_end_matches(".json").to_string());
+                }
+            }
+        }
+
+        versions.sort();
+        Ok(versions)
+    }
+
+    /// Get the newest stable OCSF version (excludes dev/alpha/beta/rc)
+    pub fn get_newest_stable_version() -> anyhow::Result<String> {
+        let versions = Self::list_versions()?;
+        let stable: Vec<_> = versions
+            .iter()
+            .filter(|v| {
+                let v_lower = v.to_lowercase();
+                !v_lower.contains("dev")
+                    && !v_lower.contains("alpha")
+                    && !v_lower.contains("beta")
+                    && !v_lower.contains("rc")
+            })
+            .collect();
+
+        stable
+            .last()
+            .map(|s| s.to_string())
+            .ok_or_else(|| anyhow::anyhow!("No stable OCSF versions found"))
+    }
+
+    /// Load a specific OCSF schema version
+    pub async fn load_version(version: &str) -> anyhow::Result<Self> {
+        let schema_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(format!("data/ocsf-schema/{version}.json"));
 
         if schema_path.exists() {
-            tracing::info!("Loading OCSF schema from {:?}", schema_path);
+            tracing::info!("Loading OCSF schema v{} from {:?}", version, schema_path);
             let content = tokio::fs::read_to_string(&schema_path).await?;
             let schema: OcsfSchema = serde_json::from_str(&content)?;
             tracing::info!(
@@ -126,7 +174,11 @@ impl OcsfSchema {
             );
             Ok(schema)
         } else {
-            tracing::warn!("Schema file not found, using minimal embedded schema");
+            tracing::warn!(
+                "Schema version {} not found at {:?}, using minimal embedded schema",
+                version,
+                schema_path
+            );
             Ok(Self::minimal_schema())
         }
     }
