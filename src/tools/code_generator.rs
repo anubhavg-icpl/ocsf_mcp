@@ -32,8 +32,19 @@ pub async fn generate_logging_code(request: GenerateCodeRequest) -> Result<Strin
         request.language
     );
 
-    let classes: Vec<String> =
-        serde_json::from_str(&request.event_classes).map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    // Parse event_classes - can be JSON array or comma-separated class names
+    let classes: Vec<String> = if request.event_classes.trim().starts_with('[') {
+        // JSON array format
+        serde_json::from_str(&request.event_classes)
+            .map_err(|e| anyhow::anyhow!("Invalid JSON in event_classes: {}", e))?
+    } else {
+        // Comma-separated class names
+        request.event_classes
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+            .collect()
+    };
 
     let artifacts = match request.language.to_lowercase().as_str() {
         "rust" => templates::rust::generate(classes, request.framework, request.include_helpers)?,

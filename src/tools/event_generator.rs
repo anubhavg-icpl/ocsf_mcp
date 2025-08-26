@@ -34,11 +34,53 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
             anyhow::anyhow!(format!("Event class '{}' not found", request.event_class))
         })?;
 
-    let req_fields: HashMap<String, Value> = serde_json::from_str(&request.required_fields)
-        .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+    // Parse required_fields - can be JSON object or comma-separated field names
+    let req_fields: HashMap<String, Value> = if request.required_fields.trim().starts_with('{') {
+        // JSON object format
+        serde_json::from_str(&request.required_fields)
+            .map_err(|e| anyhow::anyhow!("Invalid JSON in required_fields: {}", e))?
+    } else {
+        // Comma-separated field names - generate default values
+        let field_names: Vec<&str> = request.required_fields.split(',').map(|s| s.trim()).collect();
+        let mut fields = HashMap::new();
+        for field_name in field_names {
+            if !field_name.is_empty() {
+                let default_value = match field_name {
+                    "activity_id" => Value::Number(serde_json::Number::from(1)),
+                    "category_uid" => Value::Number(serde_json::Number::from(ec.uid / 1000)),
+                    "class_uid" => Value::Number(serde_json::Number::from(ec.uid)),
+                    "severity_id" => Value::Number(serde_json::Number::from(1)),
+                    "type_uid" => Value::Number(serde_json::Number::from(ec.uid * 100 + 1)),
+                    "time" => Value::String(chrono::Utc::now().to_rfc3339()),
+                    _ => Value::String(format!("default_{}", field_name)),
+                };
+                fields.insert(field_name.to_string(), default_value);
+            }
+        }
+        fields
+    };
 
     let opt_fields: HashMap<String, Value> = if let Some(opt) = request.optional_fields {
-        serde_json::from_str(&opt).map_err(|e| anyhow::anyhow!(e.to_string()))?
+        if opt.trim().starts_with('{') {
+            // JSON object format
+            serde_json::from_str(&opt)
+                .map_err(|e| anyhow::anyhow!("Invalid JSON in optional_fields: {}", e))?
+        } else {
+            // Comma-separated field names - generate default values
+            let field_names: Vec<&str> = opt.split(',').map(|s| s.trim()).collect();
+            let mut fields = HashMap::new();
+            for field_name in field_names {
+                if !field_name.is_empty() {
+                    let default_value = match field_name {
+                        "message" => Value::String("Generated OCSF event".to_string()),
+                        "user" => serde_json::json!({"name": "example_user", "uid": "1001"}),
+                        _ => Value::String(format!("default_{}", field_name)),
+                    };
+                    fields.insert(field_name.to_string(), default_value);
+                }
+            }
+            fields
+        }
     } else {
         HashMap::new()
     };
