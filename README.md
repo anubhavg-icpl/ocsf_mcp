@@ -1,42 +1,52 @@
 # OCSF MCP Server
 
-A Rust-based Model Context Protocol (MCP) server that helps AI coding assistants implement OCSF (Open Cybersecurity Schema Framework) based logging in any application.
 
-## Overview
+A fully-fledged Rust-based Model Context Protocol (MCP) server that enables AI coding assistants to implement OCSF (Open Cybersecurity Schema Framework) based logging in any application.
 
-This MCP server provides tools for:
+## 🚀 Features
 
-- **Schema Browsing**: Explore OCSF categories, event classes, and attributes interactively
-- **Event Generation**: Generate valid OCSF-compliant events with proper structure
-- **Validation**: Validate existing events against OCSF schema
-- **Code Generation**: Generate logging code in multiple languages (Rust, Python, etc.)
-- **Custom Mapping**: Map proprietary log formats to OCSF event classes
-- **Learning**: Access example events for different scenarios
+This MCP server provides comprehensive OCSF tooling:
 
-## Architecture
+- **🔍 Schema Browsing**: Explore OCSF categories, event classes, and attributes interactively
+- **⚡ Event Generation**: Generate valid OCSF-compliant events with proper structure
+- **✅ Validation**: Validate existing events against OCSF schema
+- **🛠️ Code Generation**: Generate logging code in multiple languages (Rust, Python, JavaScript)
+- **🔄 Custom Mapping**: Map proprietary log formats to OCSF event classes
+- **📚 Learning**: Access example events for different scenarios
+- **🔧 Version Management**: Support for multiple OCSF schema versions (1.0.0 - 1.7.0-dev)
+
+## 🏗️ Architecture
 
 ```
-AI Assistant (Claude Code, etc.)
-    ↓ MCP Protocol
+AI Assistant (Claude, etc.)
+    ↓ MCP Protocol (stdio)
 OCSF MCP Server (Rust)
-    ├── Tools Layer (6 MCP tools)
-    ├── OCSF Core Engine (schema, validation, events)
-    └── Code Templates (multi-language support)
+    ├── 🛠️ Tools Layer (7 MCP tools)
+    ├── 🧠 OCSF Core Engine (schema, validation, events)
+    ├── 📝 Code Templates (multi-language support)
+    └── 📊 Schema Data (embedded JSON schemas)
 ```
 
-## Available MCP Tools
+## 🔧 Available MCP Tools
 
 ### 1. `browse_ocsf_schema`
 Browse OCSF schema categories, event classes, and attributes.
 
 **Parameters:**
-- `category` (optional): Category name (e.g., "system_activity", "iam")
-- `event_class` (optional): Event class name (e.g., "authentication")
-- `show_attributes`: Show detailed attribute information
+- `category` (optional): Category name (e.g., "network", "iam", "system")
+- `event_class` (optional): Event class name (e.g., "authentication", "file_activity")
+- `show_attributes`: Boolean - Show detailed attribute information
 
-**Example:**
-```
-browse_ocsf_schema(category="iam", show_attributes=false)
+**Examples:**
+```bash
+# Browse all categories
+browse_ocsf_schema(show_attributes=false)
+
+# Browse specific category
+browse_ocsf_schema(category="network", show_attributes=true)
+
+# Browse specific event class
+browse_ocsf_schema(event_class="authentication", show_attributes=true)
 ```
 
 ### 2. `generate_ocsf_event`
@@ -44,15 +54,23 @@ Generate valid OCSF event JSON from parameters.
 
 **Parameters:**
 - `event_class`: Event class name
-- `required_fields`: JSON string with required fields
-- `optional_fields`: JSON string with optional fields
+- `required_fields`: Comma-separated field names OR JSON object with field values
+- `optional_fields`: Comma-separated field names OR JSON object with field values
 
-**Example:**
-```
+**Examples:**
+```bash
+# Using comma-separated field names (auto-generates values)
 generate_ocsf_event(
-  event_class="authentication",
-  required_fields='{"user": {"name": "john.doe"}, "status": "success"}',
-  optional_fields='{"auth_protocol": "OAuth2"}'
+    event_class="authentication",
+    required_fields="activity_id, category_uid, class_uid, severity_id, time, type_uid",
+    optional_fields="message, user"
+)
+
+# Using JSON objects with specific values
+generate_ocsf_event(
+    event_class="authentication",
+    required_fields='{"activity_id": 1, "time": "2025-01-15T10:30:00Z"}',
+    optional_fields='{"user": {"name": "john.doe", "uid": "1001"}}'
 )
 ```
 
@@ -62,21 +80,36 @@ Validate an OCSF event against the schema.
 **Parameters:**
 - `event_json`: The OCSF event JSON string to validate
 
+**Example:**
+```bash
+validate_ocsf_event(
+    event_json='{"metadata": {"version": "1.7.0-dev", "event_class": "authentication"}, "time": "2025-01-15T10:30:00Z"}'
+)
+```
+
 ### 4. `generate_logging_code`
 Generate OCSF logging code for a specific language/framework.
 
 **Parameters:**
-- `language`: Target language (rust, python, go, java, javascript)
-- `event_classes`: JSON array of event classes to support
+- `language`: Target language (rust, python, javascript)
+- `event_classes`: Comma-separated class names OR JSON array of event classes
 - `framework` (optional): Logging framework
-- `include_helpers`: Include builder patterns and helpers
+- `include_helpers`: Boolean - Include builder patterns and helpers
 
-**Example:**
-```
+**Examples:**
+```bash
+# Using comma-separated class names
 generate_logging_code(
-  language="rust",
-  event_classes='["authentication", "process_activity"]',
-  include_helpers=true
+    language="python",
+    event_classes="authentication,file_activity",
+    include_helpers=true
+)
+
+# Using JSON array
+generate_logging_code(
+    language="rust",
+    event_classes='["authentication", "process_activity"]',
+    include_helpers=true
 )
 ```
 
@@ -87,12 +120,40 @@ Help map custom log format to OCSF event class.
 - `sample_log`: User's existing log entry
 - `suggested_class` (optional): Suggested event class
 
+**Example:**
+```bash
+map_custom_to_ocsf(
+    sample_log="2025-01-15 10:30:00 INFO [auth] User john.doe successfully logged in from IP 192.168.1.100",
+    suggested_class="authentication"
+)
+```
+
 ### 6. `list_event_examples`
 Get example OCSF events for learning.
 
 **Parameters:**
 - `event_class`: Event class name
-- `scenario` (optional): Specific scenario (e.g., "failed_login")
+- `scenario` (optional): Specific scenario (e.g., "failed_login", "successful_login")
+
+**Example:**
+```bash
+list_event_examples(
+    event_class="authentication",
+    scenario="failed_login"
+)
+```
+
+### 7. `list_ocsf_versions` & `get_newest_ocsf_version`
+Version management tools for OCSF schema versions.
+
+**Examples:**
+```bash
+# List all available versions
+list_ocsf_versions()
+
+# Get newest stable version
+get_newest_ocsf_version()
+```
 
 ## Building and Running
 
