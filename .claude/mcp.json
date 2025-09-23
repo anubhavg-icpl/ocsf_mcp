@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ocsf": {
+      "command": "/Users/anubhavg/Desktop/ocsf_mcp/target/release/ocsf-mcp-server",
+      "args": [],
+      "env": {},
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}

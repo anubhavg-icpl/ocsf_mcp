@@ -188,50 +188,100 @@ Add to your Claude Desktop MCP configuration (`claude_desktop_config.json`):
 }
 ```
 
-## OCSF Schema Support
+## 📊 OCSF Schema Support
 
-Supports **OCSF v1.7.0-dev** (latest) with the following categories:
+Supports **OCSF v1.7.0-dev** (latest) with comprehensive coverage:
 
-1. **System Activity** (UID: 1) - OS and device-level events
-2. **Findings** (UID: 2) - Security findings
-3. **Identity & Access Management** (UID: 3) - Auth and account events
-4. **Network Activity** (UID: 4) - Network connections
-5. **Discovery** (UID: 5) - Asset discovery
-6. **Application Activity** (UID: 6) - Application events
+### 🏷️ Categories (8 total)
+1. **System Activity** (UID: 1) - OS and device-level events (14 classes)
+2. **Findings** (UID: 2) - Security findings (8 classes)
+3. **Identity & Access Management** (UID: 3) - Auth and account events (6 classes)
+4. **Network Activity** (UID: 4) - Network connections (14 classes)
+5. **Discovery** (UID: 5) - Asset discovery (26 classes)
+6. **Application Activity** (UID: 6) - Application events (8 classes)
+7. **Remediation** (UID: 7) - Security remediation (4 classes)
+8. **Unmanned Systems** (UID: 8) - Drone and autonomous systems (2 classes)
 
-### Schema Statistics
+### 📈 Schema Statistics
+- **82+ Event Classes** - Comprehensive coverage of security events
+- **Multiple Versions** - Support for OCSF 1.0.0 through 1.7.0-dev
+- **Rich Metadata** - Detailed object definitions and type system
 
-- **83 Event Classes** - Comprehensive coverage of security events
-- **168 Objects** - Detailed object definitions
-- **24 Types** - Type system for attributes
-
-### Sample Event Classes
-
+### 🎯 Popular Event Classes
 - `authentication` (UID: 3002) - Login, logout, auth failures
-- `process_activity` (UID: 1007) - Process lifecycle
-- `file_activity` (UID: 1001) - File operations
-- `network_activity` (UID: 4001) - Network connections
-- `kernel_activity` (UID: 1003) - Kernel-level events
-- `email_file_activity` (UID: 4011) - Email attachments
-- `network_remediation_activity` (UID: 7004) - Network remediation
-- And 76 more event classes!
+- `process_activity` (UID: 1007) - Process lifecycle events
+- `file_activity` (UID: 1001) - File operations and access
+- `network_activity` (UID: 4001) - Network connections and traffic
+- `http_activity` (UID: 4002) - HTTP requests and responses
+- `dns_activity` (UID: 4003) - DNS queries and responses
+- `security_finding` (UID: 2001) - Security scan results
+- `vulnerability_finding` (UID: 2006) - Vulnerability assessments
 
-## Use Cases
+## 💡 Use Cases
 
 ### For AI Coding Assistants
-
-1. **Understanding OCSF**: "Show me all event classes in the IAM category"
-2. **Implementing Logging**: "Generate Python code for logging authentication events"
-3. **Migration**: "Help me map this Splunk log to OCSF format"
-4. **Validation**: "Check if my event JSON is valid OCSF"
-5. **Learning**: "Show me examples of failed login events"
+1. **🔍 Understanding OCSF**: "Show me all event classes in the IAM category"
+2. **⚡ Implementing Logging**: "Generate Python code for logging authentication events"
+3. **🔄 Migration**: "Help me map this Splunk log to OCSF format"
+4. **✅ Validation**: "Check if my event JSON is valid OCSF"
+5. **📚 Learning**: "Show me examples of failed login events"
 
 ### For Developers
+- 🚀 Quickly bootstrap OCSF logging in new applications
+- ✅ Validate existing security logs against OCSF standards
+- 🔄 Migrate from proprietary formats to OCSF
+- 📖 Learn OCSF schema through interactive exploration
 
-- Quickly bootstrap OCSF logging in new applications
-- Validate existing security logs against OCSF standards
-- Migrate from proprietary formats to OCSF
-- Learn OCSF schema through interactive exploration
+## 🎯 Practical Examples
+
+### Example 1: Implementing Authentication Logging
+
+**Step 1: Explore the schema**
+```bash
+browse_ocsf_schema(category="iam", show_attributes=true)
+```
+
+**Step 2: Generate example events**
+```bash
+list_event_examples(event_class="authentication")
+```
+
+**Step 3: Generate logging code**
+```bash
+generate_logging_code(
+    language="python",
+    event_classes="authentication",
+    include_helpers=true
+)
+```
+
+**Result**: Complete Python module with OCSF authentication logging!
+
+### Example 2: Migrating Existing Logs
+
+**Your current log:**
+```
+2025-01-15 10:30:00 ERROR [auth] Failed login attempt for user 'admin' from 192.168.1.100
+```
+
+**Step 1: Map to OCSF**
+```bash
+map_custom_to_ocsf(
+    sample_log="2025-01-15 10:30:00 ERROR [auth] Failed login attempt for user 'admin' from 192.168.1.100",
+    suggested_class="authentication"
+)
+```
+
+**Step 2: Generate OCSF event**
+```bash
+generate_ocsf_event(
+    event_class="authentication",
+    required_fields="activity_id, time, type_uid",
+    optional_fields='{"user": {"name": "admin"}, "src_endpoint": {"ip": "192.168.1.100"}, "status": "failure"}'
+)
+```
+
+**Result**: Standards-compliant OCSF authentication event!
 
 ## Architecture Details
 
@@ -286,30 +336,77 @@ let schema = client
     .await?;
 ```
 
-## Testing
+## 🧪 Testing
 
+### Run Tests
 ```bash
-# Run tests
+# Run all tests
 cargo test
 
-# Run with debug logging
-RUST_LOG=debug cargo run
+# Run with output
+cargo test -- --nocapture
+
+# Test specific module
+cargo test schema_tests
+
+# Integration tests only
+cargo test --test integration_tests
 ```
 
-## Comparison with Tenzir MCP Server
+### Test Coverage
+- ✅ Schema loading and validation
+- ✅ Event generation and validation
+- ✅ Tool parameter parsing
+- ✅ Version management
+- ✅ Multi-version compatibility
 
-| Feature | OCSF MCP (This) | Tenzir MCP |
-|---------|----------------|------------|
-| Language | Rust | Python |
-| OCSF Version | v1.7.0-dev (83 classes) | v1.3.0 (~40 classes) |
-| Schema Loading | File-based + embedded | Remote API |
-| Focus | AI-assisted OCSF implementation | TQL pipeline generation |
-| Performance | 4,700+ QPS | ~100-500 QPS (Python) |
-| Code Gen | Multi-language (Rust, Python, JS) | TQL specific |
-| Validation | Built-in schema validation | Via Tenzir Node |
-| Deployment | Single binary (~5MB) | Requires Node/Docker (~50MB+) |
+## 🚀 Development
 
-## Contributing
+### Project Structure
+```
+src/
+├── main.rs              # MCP server entry point
+├── lib.rs               # Library exports
+├── ocsf/                # Core OCSF engine
+│   ├── schema.rs        # Schema parser and registry
+│   ├── event.rs         # Event models and builders
+│   ├── categories.rs    # Category definitions
+│   └── validation.rs    # Event validation
+├── tools/               # MCP tool implementations
+│   ├── mod.rs           # Tool router and handlers
+│   ├── schema_browser.rs
+│   ├── event_generator.rs
+│   ├── validator.rs
+│   ├── code_generator.rs
+│   ├── mapper.rs
+│   └── version_tools.rs
+└── templates/           # Code generation templates
+    ├── python.rs
+    ├── javascript.rs
+    └── rust.rs
+```
+
+### Adding New Languages
+
+1. Create new template file in `src/templates/`
+2. Implement generator function
+3. Add to `code_generator.rs` match statement
+4. Add tests
+
+### Adding New Event Classes
+
+1. Update schema JSON files in `data/ocsf-schema/`
+2. Add examples in `event.rs`
+3. Update integration tests
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Add tests for new functionality
+4. Ensure all tests pass (`cargo test`)
+5. Update documentation
+6. Submit a pull request
 
 Contributions welcome! Areas for improvement:
 
@@ -319,11 +416,18 @@ Contributions welcome! Areas for improvement:
 - OCSF profile support
 - Custom extension support
 
-## License
+## 📄 License
 
 Apache 2.0 (matching OCSF and Tenzir MCP)
 
-## Resources
+## 🔗 Related Projects
+
+- [OCSF Schema](https://schema.ocsf.io/) - Official OCSF schema and documentation
+- [MCP SDK](https://github.com/modelcontextprotocol/rust-sdk) - Rust MCP SDK
+- [Claude Desktop](https://claude.ai/desktop) - AI assistant with MCP support
+- [OCSF GitHub](https://github.com/ocsf/ocsf-schema) - OCSF schema repository
+
+## 📚 Resources
 
 - [OCSF Schema Browser](https://schema.ocsf.io/)
 - [OCSF GitHub](https://github.com/ocsf/ocsf-schema)
@@ -332,11 +436,17 @@ Apache 2.0 (matching OCSF and Tenzir MCP)
 - [Rust MCP SDK](https://github.com/modelcontextprotocol/rust-sdk)
 - [Tenzir MCP Server](https://github.com/tenzir/mcp)
 
-## Credits
+## 🙏 Credits
 
 Built with:
 - [rmcp](https://github.com/modelcontextprotocol/rust-sdk) - Official Rust MCP SDK
 - [tokio](https://tokio.rs/) - Async runtime
 - **OCSF Schema v1.7.0-dev** - Latest OCSF schema (83 classes, 168 objects)
 
-Inspired by [Tenzir MCP Server](https://github.com/tenzir/mcp) for OCSF mapping approach.
+
+
+---
+
+**Made with ❤️ for the cybersecurity community**
+
+*Enabling standardized security logging across all applications through AI-assisted development.*
