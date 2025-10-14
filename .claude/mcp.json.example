@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/mcp.json",
+  "mcpServers": {
+    "ocsf": {
+      "command": "/absolute/path/to/ocsf_mcp/target/release/ocsf-mcp-server",
+      "args": [],
+      "env": {},
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}
