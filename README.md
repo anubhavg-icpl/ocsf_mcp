@@ -418,7 +418,7 @@ Contributions welcome! Areas for improvement:
 
 ## 📄 License
 
-Apache 2.0 (matching OCSF and Tenzir MCP)
+MIT License - see LICENSE file for details.
 
 ## 🔗 Related Projects
 
@@ -434,7 +434,6 @@ Apache 2.0 (matching OCSF and Tenzir MCP)
 - [OCSF v1.7.0-dev Release](https://github.com/ocsf/ocsf-schema/releases)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Rust MCP SDK](https://github.com/modelcontextprotocol/rust-sdk)
-- [Tenzir MCP Server](https://github.com/tenzir/mcp)
 
 ## 🙏 Credits
 
