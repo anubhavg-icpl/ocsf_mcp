@@ -1,0 +1,80 @@
+# OCSF MCP Server - Docker Build Exclusions
+# Optimizes build context and reduces image size
+
+# Rust build artifacts
+target/
+**/*.rs.bk
+*.pdb
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Documentation
+*.md
+!README.md
+docs/
+ARCHITECTURE.md
+CHANGELOG.md
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+tests/
+*.test
+coverage/
+*.profraw
+
+# CI/CD
+.github/workflows/
+.gitlab-ci.yml
+.travis.yml
+circle.yml
+
+# Docker files (don't need these in build context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+*.log
+logs/
+/var/log/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Package manager
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Archives
+*.tar
+*.tar.gz
+*.zip
+*.rar

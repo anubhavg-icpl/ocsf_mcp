@@ -1,0 +1,119 @@
+# OCSF MCP Server - Docker Compose Configuration
+# For local development and testing
+#
+# Maintainer: Anubhav Gain (anubhavg-cipl)
+# Contact: anubhavg@infopercept.com
+
+version: '3.8'
+
+services:
+  ocsf-mcp:
+    # Service name for the OCSF MCP Server
+    container_name: ocsf-mcp-server
+
+    # Build configuration
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+
+    # Image name
+    image: ocsf-mcp:latest
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Enable interactive mode for stdio transport
+    stdin_open: true
+    tty: true
+
+    # Environment variables
+    environment:
+      - OCSF_SCHEMA_PATH=/opt/ocsf_mcp/data/ocsf-schema
+      - OCSF_LOG_LEVEL=info
+      - RUST_LOG=ocsf_mcp=info
+      - RUST_BACKTRACE=1
+      - TZ=UTC
+
+    # Volume mounts (optional - for custom schema versions)
+    volumes:
+      # Uncomment to use custom OCSF schemas
+      # - ./data/ocsf-schema:/opt/ocsf_mcp/data/ocsf-schema:ro
+
+      # Uncomment to persist logs
+      # - ./logs:/var/log/ocsf_mcp
+
+      # For development: mount source code (requires rebuild)
+      # - ./src:/build/src:ro
+
+    # Resource limits (production-ready)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "/opt/ocsf_mcp/bin/ocsf-mcp-server", "--help"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Read-only root filesystem for security
+    read_only: true
+
+    # Temporary filesystem for runtime
+    tmpfs:
+      - /tmp:noexec,nosuid,size=64M
+
+    # Labels for metadata
+    labels:
+      com.infopercept.ocsf.version: "0.1.0"
+      com.infopercept.ocsf.maintainer: "Anubhav Gain <anubhavg@infopercept.com>"
+      io.docker.mcp.server: "true"
+      io.docker.mcp.transport: "stdio"
+      io.docker.mcp.category: "security,logging"
+
+# =============================================================================
+# Usage Instructions:
+# =============================================================================
+#
+# Build and start the container:
+#   docker compose up --build
+#
+# Start in detached mode:
+#   docker compose up -d
+#
+# View logs:
+#   docker compose logs -f ocsf-mcp
+#
+# Stop the container:
+#   docker compose down
+#
+# Rebuild without cache:
+#   docker compose build --no-cache
+#
+# Test MCP communication:
+#   echo '{"jsonrpc":"2.0","id":1,"method":"ping"}' | docker compose run --rm ocsf-mcp
+#
+# Interactive shell (for debugging):
+#   docker compose exec ocsf-mcp /bin/sh
+#
+# =============================================================================
