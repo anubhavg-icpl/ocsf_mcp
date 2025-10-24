@@ -27,7 +27,7 @@ RUN apk add --no-cache \
 WORKDIR /build
 
 # Copy dependency manifests first for better caching
-COPY Cargo.toml Cargo.lock ./
+COPY Cargo.toml ./
 
 # Create dummy source to cache dependencies
 RUN mkdir -p src && \
