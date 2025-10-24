@@ -155,10 +155,50 @@ list_ocsf_versions()
 get_newest_ocsf_version()
 ```
 
-## Building and Running
+## 🐳 Quick Start with Docker (Recommended)
+
+### Using Docker Hub (Easiest)
+
+```bash
+# Pull the latest image
+docker pull anubhavgcipl/ocsf-mcp:latest
+
+# Run interactively
+docker run -i anubhavgcipl/ocsf-mcp:latest
+```
+
+### Using Docker MCP Toolkit (Docker Desktop 4.42+)
+
+1. **Enable MCP Toolkit** in Docker Desktop settings
+2. **Add OCSF server:**
+   ```bash
+   docker mcp server add ocsf --image anubhavgcipl/ocsf-mcp:latest
+   ```
+3. **Connect to Claude Desktop:**
+   ```bash
+   docker mcp client connect claude-desktop --global
+   ```
+
+### Using Makefile (Development)
+
+```bash
+# Build and test locally
+make build
+make test
+
+# Run with Docker Compose
+make compose-up
+
+# Build multi-arch and publish
+make publish
+```
+
+See `make help` for all available commands.
+
+## 🏗️ Building from Source
 
 ### Prerequisites
-- Rust 1.70+ (with 2021 edition support)
+- Rust 1.83+ (with 2021 edition support)
 - Cargo
 
 ### Build
@@ -173,10 +213,23 @@ cargo run --bin ocsf-mcp-server
 
 The server runs on stdio transport and communicates via JSON-RPC 2.0.
 
-## Configuration for Claude Desktop
+## 📋 Configuration for Claude Desktop
 
+### Option 1: Using Docker (Recommended)
 Add to your Claude Desktop MCP configuration (`claude_desktop_config.json`):
 
+```json
+{
+  "mcpServers": {
+    "ocsf": {
+      "command": "docker",
+      "args": ["run", "-i", "anubhavgcipl/ocsf-mcp:latest"]
+    }
+  }
+}
+```
+
+### Option 2: Using Local Binary
 ```json
 {
   "mcpServers": {
@@ -186,6 +239,12 @@ Add to your Claude Desktop MCP configuration (`claude_desktop_config.json`):
     }
   }
 }
+```
+
+### Option 3: Using Docker MCP Toolkit
+No configuration needed! Just use:
+```bash
+docker mcp client connect claude-desktop --global
 ```
 
 ## 📊 OCSF Schema Support
@@ -415,6 +474,43 @@ Contributions welcome! Areas for improvement:
 - Advanced validation with JSONSchema
 - OCSF profile support
 - Custom extension support
+
+## 👨‍💻 Maintainer & Author
+
+**Anubhav Gain** (anubhavg-cipl)
+📧 anubhavg@infopercept.com
+🏢 InfoPercept
+🐙 [GitHub](https://github.com/anubhavg-cipl)
+
+## 🐳 Docker Deployment
+
+### Production-Ready Features
+- ✅ Multi-stage builds for minimal image size (~30MB)
+- ✅ Multi-architecture support (linux/amd64, linux/arm64)
+- ✅ Non-root user execution
+- ✅ Read-only filesystem
+- ✅ Health checks included
+- ✅ Security scanning with Trivy
+- ✅ Automated CI/CD with GitHub Actions
+
+### Docker Hub
+```bash
+docker pull anubhavgcipl/ocsf-mcp:latest
+```
+
+**Registry:** [hub.docker.com/r/anubhavgcipl/ocsf-mcp](https://hub.docker.com/r/anubhavgcipl/ocsf-mcp)
+
+### Build Your Own
+```bash
+# Quick build
+make build
+
+# Production multi-arch build
+make production-deploy
+
+# Local testing
+make compose-up
+```
 
 ## 📄 License
 
