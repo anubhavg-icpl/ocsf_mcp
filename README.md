@@ -198,7 +198,7 @@ See `make help` for all available commands.
 ## 🏗️ Building from Source
 
 ### Prerequisites
-- Rust 1.83+ (with 2021 edition support)
+- Rust 1.85+ (with 2024 edition support)
 - Cargo
 
 ### Build

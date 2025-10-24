@@ -8,7 +8,7 @@
 # =============================================================================
 # Stage 1: Builder - Compile Rust application
 # =============================================================================
-FROM rust:1.83-alpine AS builder
+FROM rust:1.90-alpine AS builder
 
 LABEL maintainer="Anubhav Gain <anubhavg@infopercept.com>" \
       author="Anubhav Gain (anubhavg-cipl)" \

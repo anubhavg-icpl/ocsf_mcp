@@ -1,3 +1,4 @@
 /target
 test_mcp.sh
 .claude/mcp.json
+Cargo.lock

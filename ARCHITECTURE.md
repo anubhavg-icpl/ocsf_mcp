@@ -410,7 +410,7 @@ ocsf_mcp/
 - **chrono** (0.4): Timestamp handling
 
 ### Development
-- **Rust 1.83+**: Language toolchain
+- **Rust 1.85+**: Language toolchain
 - **Cargo**: Build system and package manager
 - **tokio-test**: Async testing framework
 
