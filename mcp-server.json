@@ -1,0 +1,318 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp-server-manifest.json",
+  "name": "ocsf-mcp-server",
+  "version": "0.1.0",
+  "displayName": "OCSF Schema & Security Logging",
+  "description": "Comprehensive MCP server for OCSF (Open Cybersecurity Schema Framework) schema management, event generation, validation, and multi-language security logging code generation",
+  "author": {
+    "name": "Anubhav Gain",
+    "email": "anubhavg@infopercept.com",
+    "github": "anubhavg-cipl",
+    "organization": "InfoPercept"
+  },
+  "homepage": "https://github.com/anubhavg-cipl/ocsf-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anubhavg-cipl/ocsf-mcp.git"
+  },
+  "license": "MIT",
+  "icon": "https://raw.githubusercontent.com/anubhavg-cipl/ocsf-mcp/master/assets/icon.png",
+  "categories": [
+    "security",
+    "logging",
+    "code-generation",
+    "schema",
+    "cybersecurity",
+    "compliance"
+  ],
+  "keywords": [
+    "ocsf",
+    "security",
+    "logging",
+    "cybersecurity",
+    "schema",
+    "event-generation",
+    "code-generation",
+    "validation",
+    "rust",
+    "mcp"
+  ],
+  "transport": {
+    "type": "stdio",
+    "protocol": "json-rpc-2.0"
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "browse_ocsf_schema",
+        "description": "Browse OCSF schema categories, event classes, and attributes with version support",
+        "parameters": {
+          "category": {
+            "type": "string",
+            "optional": true,
+            "description": "Filter by category (e.g., 'network', 'iam', 'system')"
+          },
+          "event_class": {
+            "type": "string",
+            "optional": true,
+            "description": "Filter by event class (e.g., 'authentication', 'file_activity')"
+          },
+          "show_attributes": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include detailed attribute information"
+          },
+          "version": {
+            "type": "string",
+            "optional": true,
+            "default": "1.7.0-dev",
+            "description": "OCSF schema version to use"
+          }
+        }
+      },
+      {
+        "name": "generate_ocsf_event",
+        "description": "Generate valid OCSF-compliant event JSON with auto-filled metadata",
+        "parameters": {
+          "event_class": {
+            "type": "string",
+            "required": true,
+            "description": "Event class name"
+          },
+          "required_fields": {
+            "type": "string",
+            "description": "Comma-separated field names OR JSON object with values"
+          },
+          "optional_fields": {
+            "type": "string",
+            "optional": true,
+            "description": "Comma-separated field names OR JSON object with values"
+          },
+          "version": {
+            "type": "string",
+            "optional": true,
+            "default": "1.7.0-dev"
+          }
+        }
+      },
+      {
+        "name": "validate_ocsf_event",
+        "description": "Validate OCSF event JSON against schema with detailed error reporting",
+        "parameters": {
+          "event_json": {
+            "type": "string",
+            "required": true,
+            "description": "OCSF event JSON string to validate"
+          }
+        }
+      },
+      {
+        "name": "generate_logging_code",
+        "description": "Generate production-ready OCSF logging code in multiple languages",
+        "parameters": {
+          "language": {
+            "type": "string",
+            "required": true,
+            "enum": ["rust", "python", "javascript", "go", "java"],
+            "description": "Target programming language"
+          },
+          "event_classes": {
+            "type": "string",
+            "required": true,
+            "description": "Comma-separated class names OR JSON array"
+          },
+          "framework": {
+            "type": "string",
+            "optional": true,
+            "description": "Logging framework (e.g., 'slog', 'winston', 'log4j')"
+          },
+          "include_helpers": {
+            "type": "boolean",
+            "default": true,
+            "description": "Include helper functions and builder patterns"
+          }
+        }
+      },
+      {
+        "name": "map_custom_to_ocsf",
+        "description": "AI-powered mapping from custom log formats to OCSF event classes",
+        "parameters": {
+          "sample_log": {
+            "type": "string",
+            "required": true,
+            "description": "Sample log entry from your existing system"
+          },
+          "suggested_class": {
+            "type": "string",
+            "optional": true,
+            "description": "Suggested OCSF event class for mapping"
+          }
+        }
+      },
+      {
+        "name": "list_event_examples",
+        "description": "Get real-world OCSF event examples for learning and reference",
+        "parameters": {
+          "event_class": {
+            "type": "string",
+            "required": true,
+            "description": "Event class name"
+          },
+          "scenario": {
+            "type": "string",
+            "optional": true,
+            "description": "Specific scenario (e.g., 'failed_login', 'successful_login')"
+          }
+        }
+      },
+      {
+        "name": "list_ocsf_versions",
+        "description": "List all available OCSF schema versions (1.0.0 - 1.7.0-dev)",
+        "parameters": {}
+      },
+      {
+        "name": "get_newest_ocsf_version",
+        "description": "Get the newest stable OCSF version (excludes dev/alpha/beta)",
+        "parameters": {}
+      },
+      {
+        "name": "read_ocsf_docs",
+        "description": "Access embedded OCSF documentation and implementation guides",
+        "parameters": {
+          "topic": {
+            "type": "string",
+            "required": true,
+            "enum": [
+              "getting-started",
+              "event-classes",
+              "mapping-guide",
+              "best-practices",
+              "versions"
+            ],
+            "description": "Documentation topic to retrieve"
+          }
+        }
+      }
+    ],
+    "resources": [],
+    "prompts": []
+  },
+  "docker": {
+    "image": "anubhavgcipl/ocsf-mcp",
+    "tags": ["latest", "0.1.0"],
+    "platforms": ["linux/amd64", "linux/arm64"],
+    "size": "~30MB",
+    "pullCommand": "docker pull anubhavgcipl/ocsf-mcp:latest"
+  },
+  "environment": {
+    "variables": [
+      {
+        "name": "OCSF_SCHEMA_PATH",
+        "description": "Path to OCSF schema data directory",
+        "default": "/opt/ocsf_mcp/data/ocsf-schema",
+        "required": false
+      },
+      {
+        "name": "OCSF_LOG_LEVEL",
+        "description": "Logging verbosity level",
+        "default": "info",
+        "enum": ["trace", "debug", "info", "warn", "error"],
+        "required": false
+      },
+      {
+        "name": "RUST_LOG",
+        "description": "Rust logging configuration",
+        "default": "ocsf_mcp=info",
+        "required": false
+      }
+    ]
+  },
+  "volumes": [
+    {
+      "path": "/opt/ocsf_mcp/data",
+      "description": "OCSF schema data (optional mount for custom schemas)",
+      "required": false,
+      "readOnly": true
+    }
+  ],
+  "healthCheck": {
+    "command": ["/opt/ocsf_mcp/bin/ocsf-mcp-server", "--help"],
+    "interval": "30s",
+    "timeout": "3s",
+    "retries": 3
+  },
+  "resources": {
+    "limits": {
+      "memory": "512MB",
+      "cpu": "1.0"
+    },
+    "reservations": {
+      "memory": "128MB",
+      "cpu": "0.25"
+    }
+  },
+  "useCases": [
+    {
+      "title": "Implement OCSF Logging in Applications",
+      "description": "Generate production-ready OCSF logging code for your application in any language",
+      "example": "Generate Python code for logging authentication events"
+    },
+    {
+      "title": "Migrate Legacy Logs to OCSF",
+      "description": "Map your existing log formats to OCSF standards with AI assistance",
+      "example": "Map this Splunk log to OCSF: '2025-01-15 10:30:00 ERROR [auth] Failed login user=admin ip=192.168.1.100'"
+    },
+    {
+      "title": "Validate Security Events",
+      "description": "Ensure your security events comply with OCSF schema requirements",
+      "example": "Validate my authentication event JSON against OCSF schema"
+    },
+    {
+      "title": "Explore OCSF Schema",
+      "description": "Interactively browse OCSF categories, event classes, and attributes",
+      "example": "Show me all event classes in the IAM category with their required attributes"
+    }
+  ],
+  "documentation": {
+    "readme": "https://github.com/anubhavg-cipl/ocsf-mcp/blob/master/README.md",
+    "architecture": "https://github.com/anubhavg-cipl/ocsf-mcp/blob/master/ARCHITECTURE.md",
+    "quickStart": "https://github.com/anubhavg-cipl/ocsf-mcp#building-and-running",
+    "examples": "https://github.com/anubhavg-cipl/ocsf-mcp#practical-examples"
+  },
+  "support": {
+    "issues": "https://github.com/anubhavg-cipl/ocsf-mcp/issues",
+    "email": "anubhavg@infopercept.com",
+    "documentation": "https://schema.ocsf.io/"
+  },
+  "integrations": {
+    "claudeDesktop": {
+      "config": {
+        "mcpServers": {
+          "ocsf": {
+            "command": "docker",
+            "args": ["run", "-i", "anubhavgcipl/ocsf-mcp:latest"]
+          }
+        }
+      }
+    },
+    "dockerMCPToolkit": {
+      "enabled": true,
+      "catalogUrl": "https://hub.docker.com/r/anubhavgcipl/ocsf-mcp"
+    }
+  },
+  "metadata": {
+    "maturity": "beta",
+    "stability": "stable",
+    "performance": {
+      "throughput": "4700+ QPS",
+      "latency": "<10ms per request",
+      "memoryFootprint": "~50MB with full schema loaded"
+    },
+    "security": {
+      "nonRoot": true,
+      "readOnlyFilesystem": true,
+      "noNewPrivileges": true,
+      "scanning": "enabled"
+    }
+  }
+}
