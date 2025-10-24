@@ -6,7 +6,7 @@
 .PHONY: help build build-nc run test clean push pull logs shell docker-login multiarch-build publish
 
 # Docker configuration
-DOCKER_USERNAME ?= anubhavgcipl
+DOCKER_USERNAME ?= anubhavgicpl
 IMAGE_NAME ?= ocsf-mcp
 VERSION ?= 0.1.0
 PLATFORMS ?= linux/amd64,linux/arm64

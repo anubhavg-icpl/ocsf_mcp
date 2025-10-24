@@ -198,11 +198,11 @@
     "prompts": []
   },
   "docker": {
-    "image": "anubhavgcipl/ocsf-mcp",
+    "image": "anubhavgicpl/ocsf-mcp",
     "tags": ["latest", "0.1.0"],
     "platforms": ["linux/amd64", "linux/arm64"],
     "size": "~30MB",
-    "pullCommand": "docker pull anubhavgcipl/ocsf-mcp:latest"
+    "pullCommand": "docker pull anubhavgicpl/ocsf-mcp:latest"
   },
   "environment": {
     "variables": [
@@ -290,14 +290,14 @@
         "mcpServers": {
           "ocsf": {
             "command": "docker",
-            "args": ["run", "-i", "anubhavgcipl/ocsf-mcp:latest"]
+            "args": ["run", "-i", "anubhavgicpl/ocsf-mcp:latest"]
           }
         }
       }
     },
     "dockerMCPToolkit": {
       "enabled": true,
-      "catalogUrl": "https://hub.docker.com/r/anubhavgcipl/ocsf-mcp"
+      "catalogUrl": "https://hub.docker.com/r/anubhavgicpl/ocsf-mcp"
     }
   },
   "metadata": {

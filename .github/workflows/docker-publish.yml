@@ -26,7 +26,7 @@ on:
         type: boolean
 
 env:
-  DOCKER_USERNAME: anubhavgcipl
+  DOCKER_USERNAME: anubhavgicpl
   IMAGE_NAME: ocsf-mcp
   PLATFORMS: linux/amd64,linux/arm64
 

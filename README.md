@@ -161,10 +161,10 @@ get_newest_ocsf_version()
 
 ```bash
 # Pull the latest image
-docker pull anubhavgcipl/ocsf-mcp:latest
+docker pull anubhavgicpl/ocsf-mcp:latest
 
 # Run interactively
-docker run -i anubhavgcipl/ocsf-mcp:latest
+docker run -i anubhavgicpl/ocsf-mcp:latest
 ```
 
 ### Using Docker MCP Toolkit (Docker Desktop 4.42+)
@@ -172,7 +172,7 @@ docker run -i anubhavgcipl/ocsf-mcp:latest
 1. **Enable MCP Toolkit** in Docker Desktop settings
 2. **Add OCSF server:**
    ```bash
-   docker mcp server add ocsf --image anubhavgcipl/ocsf-mcp:latest
+   docker mcp server add ocsf --image anubhavgicpl/ocsf-mcp:latest
    ```
 3. **Connect to Claude Desktop:**
    ```bash
@@ -223,7 +223,7 @@ Add to your Claude Desktop MCP configuration (`claude_desktop_config.json`):
   "mcpServers": {
     "ocsf": {
       "command": "docker",
-      "args": ["run", "-i", "anubhavgcipl/ocsf-mcp:latest"]
+      "args": ["run", "-i", "anubhavgicpl/ocsf-mcp:latest"]
     }
   }
 }
@@ -495,10 +495,10 @@ Contributions welcome! Areas for improvement:
 
 ### Docker Hub
 ```bash
-docker pull anubhavgcipl/ocsf-mcp:latest
+docker pull anubhavgicpl/ocsf-mcp:latest
 ```
 
-**Registry:** [hub.docker.com/r/anubhavgcipl/ocsf-mcp](https://hub.docker.com/r/anubhavgcipl/ocsf-mcp)
+**Registry:** [hub.docker.com/r/anubhavgicpl/ocsf-mcp](https://hub.docker.com/r/anubhavgicpl/ocsf-mcp)
 
 ### Build Your Own
 ```bash
