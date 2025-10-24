@@ -16,7 +16,7 @@
     "url": "https://github.com/anubhavg-cipl/ocsf-mcp.git"
   },
   "license": "MIT",
-  "icon": "https://raw.githubusercontent.com/anubhavg-cipl/ocsf-mcp/master/assets/icon.png",
+  "icon": "https://raw.githubusercontent.com/anubhavg-cipl/ocsf-mcp/master/assets/icons/icon.png",
   "categories": [
     "security",
     "logging",

@@ -1,5 +1,17 @@
 # OCSF MCP Server
 
+<div align="center">
+
+![OCSF MCP Server](assets/banners/banner.png)
+
+[![Docker Hub](https://img.shields.io/badge/docker-anubhavgicpl%2Focsf--mcp-blue?logo=docker)](https://hub.docker.com/r/anubhavgicpl/ocsf-mcp)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Rust](https://img.shields.io/badge/rust-1.85%2B-orange?logo=rust)](https://www.rust-lang.org/)
+[![MCP](https://img.shields.io/badge/MCP-compatible-purple)](https://modelcontextprotocol.io/)
+
+</div>
+
+---
 
 A fully-fledged Rust-based Model Context Protocol (MCP) server that enables AI coding assistants to implement OCSF (Open Cybersecurity Schema Framework) based logging in any application.
 
@@ -477,10 +489,14 @@ Contributions welcome! Areas for improvement:
 
 ## 👨‍💻 Maintainer & Author
 
+<div align="center">
+<img src="assets/icons/icon.png" alt="OCSF MCP Logo" width="120"/>
+
 **Anubhav Gain** (anubhavg-cipl)
-📧 anubhavg@infopercept.com
-🏢 InfoPercept
-🐙 [GitHub](https://github.com/anubhavg-cipl)
+
+📧 anubhavg@infopercept.com | 🏢 InfoPercept | 🐙 [GitHub](https://github.com/anubhavg-cipl)
+
+</div>
 
 ## 🐳 Docker Deployment
 

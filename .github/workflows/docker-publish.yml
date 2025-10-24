@@ -34,9 +34,11 @@ jobs:
   build-and-test:
     name: Build & Test Docker Image
     runs-on: ubuntu-latest
+    environment: Docker Hub
     permissions:
       contents: read
       packages: write
+      security-events: write
 
     steps:
       - name: Checkout repository
