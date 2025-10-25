@@ -41,7 +41,11 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
             .map_err(|e| anyhow::anyhow!("Invalid JSON in required_fields: {e}"))?
     } else {
         // Comma-separated field names - generate default values
-        let field_names: Vec<&str> = request.required_fields.split(',').map(|s| s.trim()).collect();
+        let field_names: Vec<&str> = request
+            .required_fields
+            .split(',')
+            .map(|s| s.trim())
+            .collect();
         let mut fields = HashMap::new();
         for field_name in field_names {
             if !field_name.is_empty() {

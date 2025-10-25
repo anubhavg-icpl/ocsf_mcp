@@ -10,24 +10,25 @@ pub mod validator;
 pub mod version_tools;
 
 // Re-export for convenience
-pub use code_generator::{generate_logging_code as generate_code_impl, GenerateCodeRequest};
-pub use docs_tool::{read_ocsf_docs as read_docs_impl, ReadOcsfDocsRequest};
-pub use event_generator::{generate_ocsf_event as generate_event_impl, GenerateEventRequest};
+pub use code_generator::{GenerateCodeRequest, generate_logging_code as generate_code_impl};
+pub use docs_tool::{ReadOcsfDocsRequest, read_ocsf_docs as read_docs_impl};
+pub use event_generator::{GenerateEventRequest, generate_ocsf_event as generate_event_impl};
 pub use mapper::{
-    list_event_examples as list_examples_impl, map_custom_to_ocsf as map_custom_impl,
-    ListExamplesRequest, MapCustomRequest,
+    ListExamplesRequest, MapCustomRequest, list_event_examples as list_examples_impl,
+    map_custom_to_ocsf as map_custom_impl,
 };
-pub use schema_browser::{browse_ocsf_schema as browse_schema_impl, BrowseSchemaRequest};
-pub use validator::{validate_ocsf_event as validate_event_impl, ValidateEventRequest};
+pub use schema_browser::{BrowseSchemaRequest, browse_ocsf_schema as browse_schema_impl};
+pub use validator::{ValidateEventRequest, validate_ocsf_event as validate_event_impl};
 pub use version_tools::{
-    get_newest_ocsf_version as get_newest_version_impl, list_ocsf_versions as list_versions_impl,
     GetNewestVersionRequest, ListVersionsRequest,
+    get_newest_ocsf_version as get_newest_version_impl, list_ocsf_versions as list_versions_impl,
 };
 
 use rmcp::{
+    ErrorData as McpError, ServerHandler,
     handler::server::{router::tool::ToolRouter, wrapper::Parameters},
     model::*,
-    tool, tool_handler, tool_router, ErrorData as McpError, ServerHandler,
+    tool, tool_handler, tool_router,
 };
 
 /// OCSF MCP Server - implements ServerHandler with tool routing

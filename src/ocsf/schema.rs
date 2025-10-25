@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use include_dir::{include_dir, Dir};
+use include_dir::{Dir, include_dir};
 static OCSF_SCHEMA_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/data/ocsf-schema");
 
 /// OCSF Schema representation (v1.7.0-dev format)
@@ -159,7 +159,10 @@ impl OcsfSchema {
                 tracing::error!(version = version, "Embedded schema file is not valid UTF-8");
             }
         } else {
-            tracing::warn!(version = version, "Schema version not found in embedded directory; falling back to minimal schema");
+            tracing::warn!(
+                version = version,
+                "Schema version not found in embedded directory; falling back to minimal schema"
+            );
         }
         Ok(Self::minimal_schema())
     }

@@ -207,7 +207,7 @@ fn generate_event_module(event_class: &str) -> Result<CodeFile> {
         _ => {
             return Err(anyhow::anyhow!(format!(
                 "Unknown event class: {event_class}"
-            )))
+            )));
         }
     };
 

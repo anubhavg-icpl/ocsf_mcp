@@ -39,7 +39,8 @@ pub async fn generate_logging_code(request: GenerateCodeRequest) -> Result<Strin
             .map_err(|e| anyhow::anyhow!("Invalid JSON in event_classes: {e}"))?
     } else {
         // Comma-separated class names
-        request.event_classes
+        request
+            .event_classes
             .split(',')
             .map(|s| s.trim().to_string())
             .filter(|s| !s.is_empty())
@@ -58,7 +59,7 @@ pub async fn generate_logging_code(request: GenerateCodeRequest) -> Result<Strin
             return Err(anyhow::anyhow!(format!(
                 "Language '{}' not yet supported. Available: rust, python, javascript",
                 request.language
-            )))
+            )));
         }
     };
 
