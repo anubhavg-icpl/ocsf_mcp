@@ -207,12 +207,6 @@
   "environment": {
     "variables": [
       {
-        "name": "OCSF_SCHEMA_PATH",
-        "description": "Path to OCSF schema data directory",
-        "default": "/opt/ocsf_mcp/data/ocsf-schema",
-        "required": false
-      },
-      {
         "name": "OCSF_LOG_LEVEL",
         "description": "Logging verbosity level",
         "default": "info",
@@ -227,14 +221,7 @@
       }
     ]
   },
-  "volumes": [
-    {
-      "path": "/opt/ocsf_mcp/data",
-      "description": "OCSF schema data (optional mount for custom schemas)",
-      "required": false,
-      "readOnly": true
-    }
-  ],
+  "volumes": [],
   "healthCheck": {
     "command": ["/opt/ocsf_mcp/bin/ocsf-mcp-server", "--help"],
     "interval": "30s",

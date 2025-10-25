@@ -30,22 +30,15 @@ services:
 
     # Environment variables
     environment:
-      - OCSF_SCHEMA_PATH=/opt/ocsf_mcp/data/ocsf-schema
       - OCSF_LOG_LEVEL=info
       - RUST_LOG=ocsf_mcp=info
       - RUST_BACKTRACE=1
       - TZ=UTC
 
-    # Volume mounts (optional - for custom schema versions)
-    volumes:
-      # Uncomment to use custom OCSF schemas
-      # - ./data/ocsf-schema:/opt/ocsf_mcp/data/ocsf-schema:ro
-
-      # Uncomment to persist logs
-      # - ./logs:/var/log/ocsf_mcp
-
-      # For development: mount source code (requires rebuild)
-      # - ./src:/build/src:ro
+    # No data volume required; schemas are embedded in the binary
+    # Uncomment to persist logs
+    # volumes:
+    #   - ./logs:/var/log/ocsf_mcp
 
     # Resource limits (production-ready)
     deploy:
