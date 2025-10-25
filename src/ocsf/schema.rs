@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::path::PathBuf;
+
+use include_dir::{include_dir, Dir};
+static OCSF_SCHEMA_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/data/ocsf-schema");
 
 /// OCSF Schema representation (v1.7.0-dev format)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -114,25 +116,14 @@ impl OcsfSchema {
         Self::load_version("1.7.0-dev").await
     }
 
-    /// List all available OCSF schema versions
+    /// List all available OCSF schema versions (from embedded directory)
     pub fn list_versions() -> anyhow::Result<Vec<String>> {
-        let schema_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("data/ocsf-schema");
-
-        if !schema_dir.exists() {
-            return Ok(vec!["1.7.0-dev".to_string()]); // Fallback to embedded
-        }
-
-        let mut versions = Vec::new();
-        for entry in std::fs::read_dir(schema_dir)? {
-            let entry = entry?;
-            let path = entry.path();
-            if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
-                if name.ends_with(".json") {
-                    versions.push(name.trim_end_matches(".json").to_string());
-                }
-            }
-        }
-
+        let mut versions: Vec<String> = OCSF_SCHEMA_DIR
+            .files()
+            .filter_map(|f| f.path().file_name().and_then(|n| n.to_str()))
+            .filter(|name| name.ends_with(".json"))
+            .map(|name| name.trim_end_matches(".json").to_string())
+            .collect();
         versions.sort();
         Ok(versions)
     }
@@ -158,29 +149,19 @@ impl OcsfSchema {
     }
 
     /// Load a specific OCSF schema version
+    // Using embedded schema directory declared at module scope
     pub async fn load_version(version: &str) -> anyhow::Result<Self> {
-        let schema_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join(format!("data/ocsf-schema/{version}.json"));
-
-        if schema_path.exists() {
-            tracing::info!("Loading OCSF schema v{} from {:?}", version, schema_path);
-            let content = tokio::fs::read_to_string(&schema_path).await?;
-            let schema: OcsfSchema = serde_json::from_str(&content)?;
-            tracing::info!(
-                "Loaded OCSF v{} - {} classes, {} objects",
-                schema.version,
-                schema.classes.len(),
-                schema.objects.len()
-            );
-            Ok(schema)
+        if let Some(file) = OCSF_SCHEMA_DIR.get_file(format!("{version}.json")) {
+            if let Some(content) = file.contents_utf8() {
+                let schema: Self = serde_json::from_str(content)?;
+                return Ok(schema);
+            } else {
+                tracing::error!(version = version, "Embedded schema file is not valid UTF-8");
+            }
         } else {
-            tracing::warn!(
-                "Schema version {} not found at {:?}, using minimal embedded schema",
-                version,
-                schema_path
-            );
-            Ok(Self::minimal_schema())
+            tracing::warn!(version = version, "Schema version not found in embedded directory; falling back to minimal schema");
         }
+        Ok(Self::minimal_schema())
     }
 
     /// Create a minimal embedded schema for fallback
@@ -353,3 +334,5 @@ fn get_category_description(category: &str) -> String {
         _ => format!("Category: {category}"),
     }
 }
+
+// moved: list_versions implementation now resides in impl OcsfSchema

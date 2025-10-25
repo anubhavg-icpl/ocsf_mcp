@@ -528,6 +528,12 @@ make production-deploy
 make compose-up
 ```
 
+## Single Binary Schema
+
+- The server embeds all OCSF schema JSON files from `data/ocsf-schema` at compile time.
+- No external schema path or data volume is required in Docker.
+- `OCSF_SCHEMA_PATH` is optional and not used by default.
+
 ## 📄 License
 
 MIT License - see LICENSE file for details.

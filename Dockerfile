@@ -86,12 +86,10 @@ RUN mkdir -p /opt/ocsf_mcp/data /opt/ocsf_mcp/bin /var/log/ocsf_mcp && \
 # Copy binary from builder
 COPY --from=builder --chown=ocsf:ocsf /build/target/release/ocsf-mcp-server /opt/ocsf_mcp/bin/
 
-# Copy OCSF schema data
-COPY --from=builder --chown=ocsf:ocsf /build/data /opt/ocsf_mcp/data
+# OCSF schema data is embedded into the binary; no external data copied
 
 # Set environment variables
-ENV OCSF_SCHEMA_PATH=/opt/ocsf_mcp/data/ocsf-schema \
-    OCSF_LOG_LEVEL=info \
+ENV OCSF_LOG_LEVEL=info \
     RUST_BACKTRACE=1 \
     RUST_LOG=ocsf_mcp=info \
     TZ=UTC \
@@ -106,7 +104,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD ["/opt/ocsf_mcp/bin/ocsf-mcp-server", "--help"]
 
 # Expose metadata for MCP clients
-VOLUME ["/opt/ocsf_mcp/data"]
+# No data volume required; schema embedded in binary
 
 # Use stdio transport for MCP protocol
 # The server communicates via stdin/stdout (JSON-RPC 2.0)
