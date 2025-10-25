@@ -36,7 +36,7 @@ pub async fn generate_logging_code(request: GenerateCodeRequest) -> Result<Strin
     let classes: Vec<String> = if request.event_classes.trim().starts_with('[') {
         // JSON array format
         serde_json::from_str(&request.event_classes)
-            .map_err(|e| anyhow::anyhow!("Invalid JSON in event_classes: {}", e))?
+            .map_err(|e| anyhow::anyhow!("Invalid JSON in event_classes: {e}"))?
     } else {
         // Comma-separated class names
         request.event_classes

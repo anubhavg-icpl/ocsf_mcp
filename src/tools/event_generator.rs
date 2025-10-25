@@ -38,7 +38,7 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
     let req_fields: HashMap<String, Value> = if request.required_fields.trim().starts_with('{') {
         // JSON object format
         serde_json::from_str(&request.required_fields)
-            .map_err(|e| anyhow::anyhow!("Invalid JSON in required_fields: {}", e))?
+            .map_err(|e| anyhow::anyhow!("Invalid JSON in required_fields: {e}"))?
     } else {
         // Comma-separated field names - generate default values
         let field_names: Vec<&str> = request.required_fields.split(',').map(|s| s.trim()).collect();
@@ -52,7 +52,7 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
                     "severity_id" => Value::Number(serde_json::Number::from(1)),
                     "type_uid" => Value::Number(serde_json::Number::from(ec.uid * 100 + 1)),
                     "time" => Value::String(chrono::Utc::now().to_rfc3339()),
-                    _ => Value::String(format!("default_{}", field_name)),
+                    _ => Value::String(format!("default_{field_name}")),
                 };
                 fields.insert(field_name.to_string(), default_value);
             }
@@ -64,7 +64,7 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
         if opt.trim().starts_with('{') {
             // JSON object format
             serde_json::from_str(&opt)
-                .map_err(|e| anyhow::anyhow!("Invalid JSON in optional_fields: {}", e))?
+                .map_err(|e| anyhow::anyhow!("Invalid JSON in optional_fields: {e}"))?
         } else {
             // Comma-separated field names - generate default values
             let field_names: Vec<&str> = opt.split(',').map(|s| s.trim()).collect();
@@ -74,7 +74,7 @@ pub async fn generate_ocsf_event(request: GenerateEventRequest) -> Result<String
                     let default_value = match field_name {
                         "message" => Value::String("Generated OCSF event".to_string()),
                         "user" => serde_json::json!({"name": "example_user", "uid": "1001"}),
-                        _ => Value::String(format!("default_{}", field_name)),
+                        _ => Value::String(format!("default_{field_name}")),
                     };
                     fields.insert(field_name.to_string(), default_value);
                 }
